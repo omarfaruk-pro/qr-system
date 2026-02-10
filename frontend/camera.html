@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Scan QR</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <h2>Scan QR Code</h2>
+
+    <button id="startBtn">Open camera</button>
+    <div id="loader" class="loader" style="display:none;">
+        Scanning...
+    </div>
+
+    <video id="video" width="300" height="300" autoplay hidden></video>
+    <canvas id="canvas" hidden></canvas>
+
+    <p id="status"></p>
+
+    <script src="https://unpkg.com/jsqr/dist/jsQR.js"></script>
+    <script src="camera.js"></script>
+</body>
+
+</html>
