@@ -4,6 +4,7 @@ pymongo
 python-jose
 passlib[bcrypt]
 python-dotenv
+python-multipart
 qrcode
 pillow
 opencv-python-headless
