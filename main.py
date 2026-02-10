@@ -7,7 +7,9 @@ import qrcode
 import io
 import base64
 from PIL import Image
-import pyzbar.pyzbar as pyzbar
+import cv2
+import numpy as np
+
 
 app = FastAPI()
 
@@ -93,16 +95,24 @@ def generate_qr(data: URLInput):
 # Scan QR (from image upload)
 @app.post("/scan-qr")
 def scan_qr(file: UploadFile = File(...)):
-    img = Image.open(file.file)
-    decoded = pyzbar.decode(img)
-    if not decoded:
-        return {"success": False, "message": "No QR found"}
-    url = decoded[0].data.decode("utf-8")
-    found = qr_collection.find_one({"url": url})
-    if found:
-        return {"success": True, "url": url, "registered": True}
-    else:
-        return {"success": True, "url": url, "registered": False}
+    image_bytes = file.file.read()
+
+    np_arr = np.frombuffer(image_bytes, np.uint8)
+    img = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
+
+    detector = cv2.QRCodeDetector()
+    data, bbox, _ = detector.detectAndDecode(img)
+
+    if not data:
+        return {"success": False, "message": "No QR code detected"}
+
+    found = qr_collection.find_one({"url": data})
+
+    return {
+        "success": True,
+        "url": data,
+        "registered": bool(found)
+    }
 
 
 @app.post("/scan-qr-url")

@@ -6,4 +6,4 @@ passlib[bcrypt]
 python-dotenv
 qrcode
 pillow
-pyzbar
+opencv-python-headless
