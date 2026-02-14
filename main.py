@@ -18,7 +18,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "https://qr-system-by-faruk.netlify.app",
-        "http://localhost:3000"
+        "http://localhost:3000",
+        "https://qr-system-rho.vercel.app/"
     ],
     allow_credentials=False,
     allow_methods=["*"],
