@@ -9,7 +9,7 @@ import base64
 from PIL import Image
 import cv2
 import numpy as np
-
+from bson import ObjectId
 
 app = FastAPI()
 
@@ -131,3 +131,19 @@ def scan_qr_url(data: ScanURL):
             "url": data.url,
             "registered": False
         }
+    
+
+
+@app.get("/user-qrs")
+def get_user_qrs(email: str):
+    qrs = list(qr_collection.find({"email": email}).sort("created_at", -1))
+
+    # MongoDB ObjectId ke string e convert korte hobe
+    for qr in qrs:
+        qr["_id"] = str(qr["_id"])
+
+    return {
+        "success": True,
+        "count": len(qrs),
+        "data": qrs
+    }
