@@ -87,6 +87,7 @@ def generate_qr(data: URLInput):
     qr_collection.insert_one({
         "email": data.email,
         "url": data.url,
+        "qr_base64": img_base64,
         "created_at": datetime.utcnow()
     })
 
