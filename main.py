@@ -26,15 +26,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Models
-class SignupUser(BaseModel):
-    name: str
-    email: str
-    password: str
-
-class LoginUser(BaseModel):
-    email: str
-    password: str
 
 class URLInput(BaseModel):
     email: str
@@ -43,36 +34,6 @@ class URLInput(BaseModel):
 class ScanURL(BaseModel):
     url: str
 
-
-# Signup
-@app.post("/signup")
-def signup(user: SignupUser):
-    existing = users_collection.find_one({"email": user.email})
-    if existing:
-        return {"success": False, "message": "Email already exists"}
-
-    users_collection.insert_one({
-        "name": user.name,
-        "email": user.email,
-        "password": user.password,
-        "created_at": datetime.utcnow()
-    })
-
-    return {"success": True, "message": "Signup successful"}
-
-
-# Login
-@app.post("/login")
-def login(user: LoginUser):
-    existing = users_collection.find_one({
-        "email": user.email,
-        "password": user.password
-    })
-
-    if existing:
-        return {"success": True, "message": "Login successful"}
-
-    return {"success": False, "message": "Invalid email/password"}
 
 
 # Generate QR
@@ -139,7 +100,6 @@ def scan_qr_url(data: ScanURL):
 def get_user_qrs(email: str):
     qrs = list(qr_collection.find({"email": email}).sort("created_at", -1))
 
-    # MongoDB ObjectId ke string e convert korte hobe
     for qr in qrs:
         qr["_id"] = str(qr["_id"])
 
